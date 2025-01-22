@@ -8,8 +8,6 @@ import 'user_state.dart';
 
 class UserBloc extends Bloc<UserEvent, UserState> {
   late UserRepository userRepository;
-  int _page = 1;
-  bool _hasNextPage = true;
   final List<UserModel> _users = [];
 
   UserBloc() : super(UserInitial()) {
@@ -18,22 +16,16 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   }
 
   Future<void> _onLoadPosts(LoadUsers event, Emitter<UserState> emit) async {
-    if (!_hasNextPage) return;
-
     try {
-      if (state is! UserLoading) {
-        emit(UserLoading(users: _users));
-      }
-      final newUsers = await userRepository.fetchUsers(_page);
+      final newUsers = await userRepository.fetchUsers();
 
-      if (newUsers.isEmpty) {
-        _hasNextPage = false;
-      } else {
-        _page++;
+      if (newUsers.isNotEmpty) {
         _users.addAll(newUsers);
       }
 
-      emit(UserLoaded(users: _users, hasNextPage: _hasNextPage));
+      emit(UserLoaded(
+        users: _users,
+      ));
     } catch (e) {
       emit(UserError(error: e.toString()));
     }

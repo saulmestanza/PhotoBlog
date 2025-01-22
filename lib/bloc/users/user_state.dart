@@ -4,21 +4,11 @@ abstract class UserState {}
 
 class UserInitial extends UserState {}
 
-class UserLoading extends UserState {
-  final List<UserModel> users;
-
-  UserLoading({
-    required this.users,
-  });
-}
-
 class UserLoaded extends UserState {
   final List<UserModel> users;
-  final bool hasNextPage;
 
   UserLoaded({
     required this.users,
-    required this.hasNextPage,
   });
 }
 

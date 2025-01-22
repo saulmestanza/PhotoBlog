@@ -3,16 +3,14 @@ import 'package:photo_blog/models/user_model.dart';
 
 class UserRepository {
   final http.Client client;
-  final int pageSize;
 
   UserRepository({
     required this.client,
-    this.pageSize = 10,
   });
 
-  Future<List<UserModel>> fetchUsers(int page) async {
+  Future<List<UserModel>> fetchUsers() async {
     final url = Uri.parse(
-      'https://jsonplaceholder.typicode.com/users?_page=$page&_limit=$pageSize',
+      'https://jsonplaceholder.typicode.com/users',
     );
 
     final response = await client.get(url);
