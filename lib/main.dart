@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'bloc/blog_bloc.dart';
+import 'bloc/blogs/blog_bloc.dart';
+import 'bloc/users/user_bloc.dart';
 import 'screen/blog_screen.dart';
 
 void main() {
@@ -29,8 +30,15 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        body: BlocProvider(
-          create: (context) => BlogBloc(),
+        body: MultiBlocProvider(
+          providers: [
+            BlocProvider<BlogBloc>(
+              create: (BuildContext context) => BlogBloc(),
+            ),
+            BlocProvider<UserBloc>(
+              create: (BuildContext context) => UserBloc(),
+            ),
+          ],
           child: const BlogScreen(),
         ),
       ),

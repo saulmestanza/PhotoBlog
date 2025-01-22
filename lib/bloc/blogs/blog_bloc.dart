@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../models/post_model.dart';
-import '../repository/post_repository.dart';
+import '../../models/post_model.dart';
+import '../../repository/post_repository.dart';
 import 'package:http/http.dart' as http;
 
 import 'blog_event.dart';

@@ -1,4 +1,4 @@
-import '../models/post_model.dart';
+import '../../models/post_model.dart';
 
 abstract class BlogState {}
 
@@ -7,7 +7,9 @@ class BlogInitial extends BlogState {}
 class BlogLoading extends BlogState {
   final List<PostModel> posts;
 
-  BlogLoading({required this.posts});
+  BlogLoading({
+    required this.posts,
+  });
 }
 
 class BlogLoaded extends BlogState {

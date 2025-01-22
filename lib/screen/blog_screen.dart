@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:photo_blog/bloc/users/user_event.dart';
+import 'package:photo_blog/models/user_model.dart';
 import 'package:photo_blog/widgets/post_widget.dart';
-import '../../../bloc/blog_bloc.dart';
-import '../../../bloc/blog_event.dart';
-import '../../../bloc/blog_state.dart';
+import 'package:photo_blog/widgets/user_widget.dart';
+import '../bloc/blogs/blog_bloc.dart';
+import '../bloc/blogs/blog_event.dart';
+import '../bloc/blogs/blog_state.dart';
+import '../bloc/users/user_bloc.dart';
+import '../bloc/users/user_state.dart';
 import '../models/post_model.dart';
 
 class BlogScreen extends StatefulWidget {
@@ -21,6 +26,7 @@ class _BlogScreenState extends State<BlogScreen> {
     super.initState();
     _scrollController = ScrollController()..addListener(_onScroll);
     context.read<BlogBloc>().add(LoadPosts());
+    context.read<UserBloc>().add(LoadUsers());
   }
 
   void _onScroll() {
@@ -44,16 +50,14 @@ class _BlogScreenState extends State<BlogScreen> {
             const TabBar(
               tabs: [
                 Tab(text: 'Posts'),
-                Tab(text: 'Placeholder'),
+                Tab(text: 'Users'),
               ],
             ),
             Expanded(
               child: TabBarView(
                 children: [
                   _postList(),
-                  const Center(
-                    child: Text(''),
-                  ),
+                  _usersList(),
                 ],
               ),
             ),
@@ -89,6 +93,39 @@ class _BlogScreenState extends State<BlogScreen> {
             final post = posts[index];
             return PostWidget(
               post: post,
+            );
+          },
+        );
+      },
+    );
+  }
+
+  _usersList() {
+    List<UserModel> users = [];
+    var hasNextPage = false;
+    return BlocBuilder<UserBloc, UserState>(
+      builder: (context, state) {
+        if (state is UserInitial ||
+            (state is UserLoading && state.users.isEmpty)) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is UserError) {
+          return Center(child: Text('Error: ${state.error}'));
+        } else if (state is UserLoaded) {
+          users = state.users;
+          hasNextPage = state.hasNextPage;
+        }
+
+        return ListView.builder(
+          controller: _scrollController,
+          itemCount: users.length + (hasNextPage ? 1 : 0),
+          itemBuilder: (context, index) {
+            if (index == users.length) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            final user = users[index];
+            return UserWidget(
+              user: user,
             );
           },
         );
