@@ -26,7 +26,11 @@ class _BlogScreenState extends State<BlogScreen> {
   void _onScroll() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
-      context.read<BlogBloc>().add(LoadPosts());
+      final blogBloc = context.read<BlogBloc>();
+
+      if (blogBloc.state is! BlogLoading) {
+        blogBloc.add(LoadPosts());
+      }
     }
   }
 
